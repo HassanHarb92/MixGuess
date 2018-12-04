@@ -45,8 +45,8 @@ def sci_notation(n):
 NBasis = 0 
 filename1 = sys.argv[1]
 filename2 = sys.argv[2]
-filename3 = "Modified-"+filename1
 flag = sys.argv[3]
+filename3 = flag+filename1
 
 print "MixGuess: Generate a new guess based on MOs from two different jobs.\n"
 print "Alpha MO Coefficients will be extracted from: ", filename1
@@ -226,7 +226,8 @@ print "Beta MO Coefficient Matrix to be copied to chkpt3 = \n", CBeta
 
 # Part 4: Write in the new matrices to a new chkpt file
 AMO = AMO1
-BMO = BMO2
+#BMO = BMO2
+BMO = AMO + MOlines
 
 print "Alpha MO placeholder = ", AMO
 print "Beta MO placeholder = ", BMO 
@@ -257,7 +258,7 @@ with open(filename1,'r') as origin:
                   counter = counter + 1
            #  counter = 1
        counter = 1
-       f2.write("\n")
+#       f2.write("\n")
 ## Part 4c : write in CBetai
        pointer = BMO 
        f2.write(data[pointer])
@@ -274,10 +275,8 @@ with open(filename1,'r') as origin:
                   counter = counter + 1
            #  counter = 1
        counter = 1
-       f2.write("\n")
-
 ## Part 4d : copy the remaining of chkpt1 starting after BMO
-       pointer = BMO + (int(NBasis*NBasis/5))+2
+       pointer = BMO + (int(NBasis*NBasis/5))+1
        while (pointer < len(data)):
           f2.write(data[pointer])
           pointer = pointer+1
