@@ -29,7 +29,6 @@ def sci_notation(n):
     a = '%.8E' % n
     return '%.8E' % np.real(n)
 
-
 # Part 1: Read the names of the checkpoint files from the command line
 
 NBasis = 0 
@@ -37,7 +36,7 @@ filename1 = sys.argv[1]
 filename2 = sys.argv[2]
 filename3 = "Modified-"+filename1
 flag = sys.argv[3]
-#flag = int(flag)
+
 print "MixGuess: Generate a new guess based on MOs from two different jobs.\n"
 print "Alpha MO Coefficients will be extracted from: ", filename1
 print "Beta MO Coefficients will be extracted from: ", filename2
@@ -82,7 +81,6 @@ print "MO lines = ", MOlines, "\n"
 
 MORawAlpha1 = np.zeros(MOElements)
 MORawBeta1 = np.zeros(MOElements)
-
 MORawAlpha2 = np.zeros(MOElements)
 MORawBeta2 = np.zeros(MOElements)
 
