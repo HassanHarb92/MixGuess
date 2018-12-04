@@ -36,7 +36,8 @@ NBasis = 0
 filename1 = sys.argv[1]
 filename2 = sys.argv[2]
 filename3 = "Modified-"+filename1
-
+flag = sys.argv[3]
+#flag = int(flag)
 print "MixGuess: Generate a new guess based on MOs from two different jobs.\n"
 print "Alpha MO Coefficients will be extracted from: ", filename1
 print "Beta MO Coefficients will be extracted from: ", filename2
@@ -79,27 +80,47 @@ if (MOElements % 5 ==0):
 
 print "MO lines = ", MOlines, "\n"
 
-MORawAlpha = np.zeros(MOElements)
-MORawBeta = np.zeros(MOElements)
+MORawAlpha1 = np.zeros(MOElements)
+MORawBeta1 = np.zeros(MOElements)
+
+MORawAlpha2 = np.zeros(MOElements)
+MORawBeta2 = np.zeros(MOElements)
 
 p = 0
 r = 0
-AOE = 0
-AMO = 0
+AMO1 = 0
+BMO1 = 0
 with open(filename1,'r') as origin:
     for i, line  in enumerate(origin):
         if  "Alpha MO coefficients" in line:              
               i=i+1
-              AMO=i
+              AMO1=i
               print "Alpha MO coefficients starts at line :", i
-              AMO = i
+              AMO1 = i
               j=i+MOlines-1
               print "Alpha MO coefficients ends at line :", j
               for m in range(0,j-i+1):
                  nextline = origin.next()
                  nextline = nextline.split()
                  for p in range(p,len(nextline)):
-                   MORawAlpha[r] = nextline[p]
+                   MORawAlpha1[r] = nextline[p]
+                   r = r+1
+                 p = 0
+
+        p = 0
+        r = 0
+        if  "Beta MO coefficients" in line:
+              i=i+1
+              BMO1=i
+              print "Beta MO coefficients in file 1 starts at line :", i
+              BMO1 = i
+              j=i+MOlines-1
+              print "Beta MO coefficients in file 1  ends at line :", j
+              for m in range(0,j-i+1):
+                 nextline = origin.next()
+                 nextline = nextline.split()
+                 for p in range(p,len(nextline)):
+                   MORawBeta1[r] = nextline[p]
                    r = r+1
                  p = 0
 
@@ -107,42 +128,102 @@ with open(filename1,'r') as origin:
 
 p = 0
 r = 0
-BMO = 0
+AMO2 = 0
+BMO2 = 0
 with open(filename2,'r') as origin:
     for i, line  in enumerate(origin):
-        if  "Beta MO coefficients" in line:              
+        if  "Alpha MO coefficients" in line:
               i=i+1
-              BMO=i
+              AMO2=i
               print "Beta MO coefficients starts at line :", i
-              BMO = i
+              AMO2 = i
               j=i+MOlines-1
               print "Beta MO coefficients ends at line :", j
               for m in range(0,j-i+1):
                  nextline = origin.next()
                  nextline = nextline.split()
                  for p in range(p,len(nextline)):
-                   MORawBeta[r] = nextline[p]
+                   MORawAlpha2[r] = nextline[p]
+                   r = r+1
+                 p = 0
+        r = 0
+        p = 0
+        if  "Beta MO coefficients" in line:              
+              i=i+1
+              BMO2=i
+              print "Beta MO coefficients starts at line :", i
+              BMO2 = i
+              j=i+MOlines-1
+              print "Beta MO coefficients ends at line :", j
+              for m in range(0,j-i+1):
+                 nextline = origin.next()
+                 nextline = nextline.split()
+                 for p in range(p,len(nextline)):
+                   MORawBeta2[r] = nextline[p]
                    r = r+1
                  p = 0
 
-print "Stored Alpha MO Coefficients = \n", MORawAlpha
-print "Stored Beta MO Coefficients = \n", MORawBeta
+print "Stored Alpha MO Coefficients from chkpt1 = \n", MORawAlpha1
+print "Stored Beta MO Coefficients from chkpt1 = \n", MORawBeta1
+
+print "Stored Alpha MO Coefficients from chkpt2 = \n", MORawAlpha2
+print "Stored Beta MO Coefficients from chkpt2 = \n", MORawBeta2
 
 CAlpha = np.zeros((NBasis,NBasis))
 CBeta = np.zeros((NBasis,NBasis))
 
-t=0
-for i in range(0,NBasis):
-   for j in range(0,NBasis):
-     CAlpha[j,i]=MORawAlpha[t]
-     CBeta[j,i]=MORawBeta[t]
-     t=t+1
 
+######## ADD ALL FOUR IF STATEMENTS: 1 (A,A), 2(A,B), 3(B,A), 4(B,B)
 
-print "Alpha MO Coefficient Matrix = \n", CAlpha
-print "Beta MO Coefficient Matrix = \n", CBeta
+if (flag == "aa"):
+    print "Copying Alpha MO (chkpt1)  -> Alpha MO (chkpt3)\n"
+    print "Copying Alpha MO (chkpt2) -> Beta MO (chkpt3)\n"
+    t=0
+    for i in range(0,NBasis):
+       for j in range(0,NBasis):
+         CAlpha[j,i]=MORawAlpha1[t]
+         CBeta[j,i]=MORawAlpha2[t]
+         t=t+1
+
+elif (flag == "ab"):
+    print "Copying Alpha MO (chkpt1)  -> Alpha MO (chkpt3)\n"
+    print "Copying Alpha MO (chkpt2) -> Beta MO (chkpt3)\n"
+    t=0
+    for i in range(0,NBasis):
+       for j in range(0,NBasis):
+         CAlpha[j,i]=MORawAlpha1[t]
+         CBeta[j,i]=MORawBeta2[t]
+         t=t+1
+
+if (flag == "ba"):
+    print "Copying Alpha MO (chkpt1)  -> Alpha MO (chkpt3)\n"
+    print "Copying Alpha MO (chkpt2) -> Beta MO (chkpt3)\n"
+    t=0
+    for i in range(0,NBasis):
+       for j in range(0,NBasis):
+         CAlpha[j,i]=MORawBeta1[t]
+         CBeta[j,i]=MORawAlpha2[t]
+         t=t+1
+
+if (flag == "bb"):
+    print "Copying Alpha MO (chkpt1)  -> Alpha MO (chkpt3)\n"
+    print "Copying Alpha MO (chkpt2) -> Beta MO (chkpt3)\n"
+    t=0
+    for i in range(0,NBasis):
+       for j in range(0,NBasis):
+         CAlpha[j,i]=MORawBeta1[t]
+         CBeta[j,i]=MORawBeta2[t]
+         t=t+1
+
+###################################################################
+
+print "Alpha MO Coefficient Matrix to be copied to chkpt3 = \n", CAlpha
+print "Beta MO Coefficient Matrix to be copied to chkpt3 = \n", CBeta
 
 # Part 4: Write in the new matrices to a new chkpt file
+
+AMO = AMO1
+BMO = BMO2
 
 print "Alpha MO placeholder = ", AMO
 print "Beta MO placeholder = ", BMO 
@@ -179,7 +260,7 @@ with open(filename1,'r') as origin:
        counter = 1
        f2.write("\n")
 ## Part 4c : write in CBetai
-       pointer = BMO - 1
+       pointer = BMO 
        f2.write(data[pointer])
 
        for i in range(0,NBasis):
@@ -199,16 +280,10 @@ with open(filename1,'r') as origin:
 ## Part 4d : copy the remaining of chkpt1 starting after BMO
 
 
-       pointer = BMO + (int(NBasis*NBasis/5))+2 -1
+       pointer = BMO + (int(NBasis*NBasis/5))+2
        while (pointer < len(data)):
           f2.write(data[pointer])
           pointer = pointer+1
 
 
-
-
-
-
-
-
-
+print "Writing results to new output file...  COMPLETE"
