@@ -181,9 +181,6 @@ print "Stored Beta MO Coefficients from chkpt2 = \n", MORawBeta2
 CAlpha = np.zeros((NBasis,NBasis))
 CBeta = np.zeros((NBasis,NBasis))
 
-
-######## ADD ALL FOUR IF STATEMENTS: 1 (A,A), 2(A,B), 3(B,A), 4(B,B)
-
 if (flag == "aa"):
     print "Copying Alpha MO (chkpt1)  -> Alpha MO (chkpt3)\n"
     print "Copying Alpha MO (chkpt2) -> Beta MO (chkpt3)\n"
@@ -224,22 +221,17 @@ if (flag == "bb"):
          CBeta[j,i]=MORawBeta2[t]
          t=t+1
 
-###################################################################
-
 print "Alpha MO Coefficient Matrix to be copied to chkpt3 = \n", CAlpha
 print "Beta MO Coefficient Matrix to be copied to chkpt3 = \n", CBeta
 
 # Part 4: Write in the new matrices to a new chkpt file
-
 AMO = AMO1
 BMO = BMO2
 
 print "Alpha MO placeholder = ", AMO
 print "Beta MO placeholder = ", BMO 
 
-
 ## Part 4a : copy the first part of chkpt1, up until AMO
-
 pointer = 0
 counter = 1
 
@@ -253,8 +245,6 @@ with open(filename1,'r') as origin:
           pointer = pointer + 1
 
 ## Part 4b : write in CAlpha
-       
-#       f2.write(data[AMO])
        for i in range(0,NBasis):
              for j in range(0,NBasis):
                   f2.write(" ")
@@ -287,12 +277,9 @@ with open(filename1,'r') as origin:
        f2.write("\n")
 
 ## Part 4d : copy the remaining of chkpt1 starting after BMO
-
-
        pointer = BMO + (int(NBasis*NBasis/5))+2
        while (pointer < len(data)):
           f2.write(data[pointer])
           pointer = pointer+1
-
 
 print "Writing results to new output file...  COMPLETE"
