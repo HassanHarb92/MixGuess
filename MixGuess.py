@@ -1,20 +1,31 @@
 #!/usr/bin/python
-
-#######################################################################################################################
+##############################################################################################################################
 #
-#  MixGuess  v. 1.0
-#  By Hassan Harb
+#   MixGuess  v. 1.0
+#   By Hassan Harb
 #
-#  Script that reads in MO Coefficients from two different states and creates a new checkpoint file with alpha MOs of
-#  the first chkpt and beta MOs of the second chkpt
+#   Script that reads in MO Coefficients from two different states and creates a new checkpoint file with alpha MOs of
+#   the first chkpt and beta MOs of the second chkpt
 #
-#  usage: python MixGuess.py Job1.fchk Job2.fchk
+#   usage: python MixGuess.py Job1.fchk Job2.fchk flag
 #
+#   flag indiacates the choice of MOs, 4 options are available:
 #
-#  Last edited by Hassan Harb, Decemnber 3, 2018
+#        aa: Alpha MOs from chkpt1 -> Alpha MOs to chkpt 3
+#            Alpha MOs from chkpt2 -> Beta MOs to chkpt 3
 #
-#######################################################################################################################
-
+#        ab: Alpha MOs from chkpt1 -> Alpha MOs to chkpt 3
+#            Beta MOs from chkpt2 -> Beta MOs to chkpt 3
+#
+#        ba: Beta MOs from chkpt1 -> Alpha MOs to chkpt 3
+#            Alpha MOs from chkpt2 -> Beta MOs to chkpt 3
+#
+#        bb: Beta MOs from chkpt1 -> Alpha MOs to chkpt 3
+#            Beta MOs from chkpt2 -> Beta MOs to chkpt 3
+#
+#   Last edited by Hassan Harb, Decemnber 4, 2018
+#
+###########################################################################################################################
 from __future__ import division
 import sys
 import math
