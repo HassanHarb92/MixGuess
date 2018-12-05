@@ -46,7 +46,7 @@ NBasis = 0
 filename1 = sys.argv[1]
 filename2 = sys.argv[2]
 flag = sys.argv[3]
-filename3 = flag+filename1
+filename3 = flag+"-"+filename1
 
 print "MixGuess: Generate a new guess based on MOs from two different jobs.\n"
 print "Alpha MO Coefficients will be extracted from: ", filename1
